@@ -1,5 +1,6 @@
 #include "waveform.h"
 #include "mcc_generated_files/mcc.h"
+#include "sine1k.h"
 #include <xc.h>
 
 static volatile uint16_t rampRatePos;
@@ -35,6 +36,9 @@ void initWaveformControl(WAVEFORM_OUTPUT funcSel)
             break;
         case SAWTOOTH:
             waveFunc = &__updateWaveformSawtooth;
+            break;
+        case SINE_1K:
+            waveFunc = &__updateWaveformSine1k;
             break;
         case DC:
         case EXT_FUNC:  //External Function must be assigned later
@@ -108,6 +112,20 @@ uint16_t __updateWaveformSawtooth(uint16_t value)
         //Value will overflow, reset to "start"
         value = startValue;
     }
+    
+    return value;
+}
+
+uint16_t __updateWaveformSine1k(uint16_t DACvalue)
+{
+    static volatile uint16_t index = 0;
+    
+    if (index == sineLength)
+    {
+        index = 0;
+    }
+    uint16_t value = sine1kTable[index];
+    index++;
     
     return value;
 }

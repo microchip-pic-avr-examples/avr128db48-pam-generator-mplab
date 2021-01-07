@@ -27,14 +27,14 @@ extern "C" {
 #define INIT_DAC_OUTPUT 0 
     
     typedef enum {
-        DC = 0, EXT_FUNC, TRIANGLE_RISING, TRIANGLE_FALLING, SAWTOOTH, SINE_10K, EEPROM
+        DC = 0, EXT_FUNC, TRIANGLE_RISING, TRIANGLE_FALLING, SAWTOOTH, SINE_1K
     } WAVEFORM_OUTPUT;
     
     //Waveform Function Pointer
     typedef uint16_t(*_WaveformISR)(uint16_t);
     
     /** 
-     * <B><FONT COLOR=BLUE>void</FONT> initWaveformControl(<FONT COLOR=BLUE>void</FONT>)</B>
+     * <B><FONT COLOR=BLUE>void</FONT> initWaveformControl(<FONT COLOR=BLUE>WAVEFORM_OUTPUT</FONT> funcSel)</B>
      * @param funcSel (WAVEFORM_OUTPUT) - Selects the waveform to generate
      * 
      * This function initializes the constants required to use the DAC to 
@@ -85,6 +85,18 @@ extern "C" {
      * a sawtooth waveform.
      *  */
     uint16_t __updateWaveformSawtooth(uint16_t DACvalue);
+    
+        /** 
+     * <B><FONT COLOR=BLUE>uint16_t</FONT> __updateWaveformSawtooth(<FONT COLOR=BLUE>void</FONT>)</B>
+     * @param DACvalue (uint16_t) - Current value in the DAC
+     * 
+     * This function is internally called by the ISR to update the DAC to generate
+     * a sine waveform at 10kHz.
+     * 
+     * Fixed at 1kHz and 1.8V to 5V output. 
+     *  */
+    uint16_t __updateWaveformSine1k(uint16_t DACvalue);
+
 
 #ifdef	__cplusplus
 }

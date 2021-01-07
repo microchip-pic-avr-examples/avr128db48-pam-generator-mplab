@@ -33,8 +33,8 @@ int main(void)
     SYSTEM_Initialize();
 
     // Init. Constants in the DAC Control
-    initWaveformControl(SAWTOOTH);
-
+    initWaveformControl(SINE_1K);
+    
     // Set ISR to Update the DAC
     TCB0_SetCaptIsrCallback(&__ISR__UpdateDAC);
     

@@ -40,6 +40,7 @@
         <itemPath>mcc_generated_files/mcc.h</itemPath>
       </logicalFolder>
       <itemPath>waveform.h</itemPath>
+      <itemPath>sine1k.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
