@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<project>                                  
+  <executable name="dist/default/production/avrDB_PAM_modulator.X.production.elf">                 
+    <memory name="program">              
+      <units>bytes</units>                 
+      <length>131072</length>                 
+      <used>2108</used>                     
+      <free>128964</free>                     
+    </memory>                              
+    <memory name="data">                 
+      <units>bytes</units>                 
+      <length>16384</length>                 
+      <used>16</used>                     
+      <free>16368</free>                     
+    </memory>                              
+  </executable>                            
+</project>                                 
