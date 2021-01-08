@@ -10,6 +10,8 @@ static volatile uint16_t startValue;
 static volatile uint16_t endValue;
 
 static volatile _WaveformISR waveFunc;
+static volatile uint8_t index;
+
 
 void initWaveformControl(WAVEFORM_OUTPUT funcSel)
 {
@@ -24,6 +26,9 @@ void initWaveformControl(WAVEFORM_OUTPUT funcSel)
     
     //Init to MAX output
     endValue = INIT_MAXIMUM_OUTPUT;
+    
+    //Init Index to 0
+    index = 0;
     
     //Lookup Table for Initialization
     switch (funcSel)
@@ -62,69 +67,104 @@ void __ISR__UpdateDAC(void)
         return;
     
     //Call the waveform function and pass the current DAC value
+    
     uint16_t data = waveFunc((DAC0.DATA >> DAC_DATA_gp));
+    
     
     //Change the Value
     DAC0_SetOutput(data);
 }
 
-uint16_t __updateWaveformTriangleRising(uint16_t value)
+void setMinimumOutputLevel(uint16_t level)
+{
+    startValue = level;
+}
+
+void setMaximumOutputLevel(uint16_t level)
+{
+    endValue = level;
+}
+
+uint16_t getMinimumOutputLevel(void)
+{
+    return startValue;
+}
+
+uint16_t getMaximumOutputLevel(void)
+{
+    return endValue;
+}
+
+void setRisingROC(uint16_t rate)
+{
+    rampRatePos = rate;
+}
+
+void setFallingROC(uint16_t rate)
+{
+    rampRateNeg = rate;
+}
+
+uint16_t __updateWaveformTriangleRising(uint16_t DACvalue)
 {
     //Update the DAC value
-    value += rampRatePos;
+    DACvalue += rampRatePos;
     
-    if (value >= endValue)
+    if (DACvalue >= endValue)
     {
         //Value will overflow, reset to "start"
-        value = endValue;
+        DACvalue = endValue;
         
         //Swap to the other function
         waveFunc = &__updateWaveformTriangleFalling;
     }
     
-    return value;
+    return DACvalue;
 }
 
-uint16_t __updateWaveformTriangleFalling(uint16_t value)
+uint16_t __updateWaveformTriangleFalling(uint16_t DACvalue)
 {    
     //Update the DAC value
-    value -= rampRateNeg;
+    DACvalue -= rampRateNeg;
     
-    if (value <= startValue)
+    if (DACvalue <= startValue)
     {
         //Value will overflow, reset to "start"        
-        value = startValue; //startValue;
+        DACvalue = startValue; //startValue;
         
         //Swap to the other function
         waveFunc = &__updateWaveformTriangleRising;
     }
     
-    return value;
+    return DACvalue;
 }
 
-uint16_t __updateWaveformSawtooth(uint16_t value)
+uint16_t __updateWaveformSawtooth(uint16_t DACvalue)
 {
     //Update the DAC value
-    value += rampRatePos;
+    DACvalue += rampRatePos;
     
-    if (value > endValue)
+    if (DACvalue > endValue)
     {
         //Value will overflow, reset to "start"
-        value = startValue;
+        DACvalue = startValue;
     }
     
-    return value;
+    return DACvalue;
 }
 
 uint16_t __updateWaveformSine1k(uint16_t DACvalue)
 {
-    static volatile uint16_t index = 0;
-    
+    //If at the end of the sine table, reset to the start
     if (index == sineLength)
     {
         index = 0;
     }
+    
+    //Get the value at the sine table
     uint16_t value = sine1kTable[index];
+    
+    //Move to the next value
     index++;
     
     return value;

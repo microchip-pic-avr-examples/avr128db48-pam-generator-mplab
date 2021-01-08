@@ -71,13 +71,13 @@ ISR(TCB0_INT_vect)
 int8_t TCB0_Initialize()
 {
     //Compare or Capture
-    TCB0.CCMP = 0x9F;
+    TCB0.CCMP = 0xEF;
 
     //Count
     TCB0.CNT = 0x00;
 
-    //ASYNC disabled; CCMPINIT disabled; CCMPEN enabled; CNTMODE INT; 
-    TCB0.CTRLB = 0x10;
+    //ASYNC disabled; CCMPINIT disabled; CCMPEN disabled; CNTMODE INT; 
+    TCB0.CTRLB = 0x00;
 
     //DBGRUN enabled; 
     TCB0.DBGCTRL = 0x01;

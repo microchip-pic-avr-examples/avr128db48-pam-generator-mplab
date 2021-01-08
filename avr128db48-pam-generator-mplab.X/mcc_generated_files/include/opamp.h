@@ -36,7 +36,7 @@
 #include "../utils/compiler.h"
 #include <stdbool.h>
 
-#define OPAMP_TIMEBASE_VALUE (15)
+#define OPAMP_TIMEBASE_VALUE (23)
 
 /**
   @Summary

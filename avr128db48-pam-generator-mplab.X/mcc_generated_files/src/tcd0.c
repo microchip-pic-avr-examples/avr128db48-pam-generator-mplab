@@ -53,16 +53,16 @@ void TCD0_SetOVFIsrCallback(TCD0_cb_t cb)
 int8_t TCD0_Initialize()
 {
     //Clear A
-    TCD0.CMPACLR = 0x01;
+    TCD0.CMPACLR = 0x0B;
 
     //SET A
     TCD0.CMPASET = 0x00;
 
     //Clear B
-    TCD0.CMPBCLR = 0x02;
+    TCD0.CMPBCLR = 0x17;
 
     //SET B
-    TCD0.CMPBSET = 0x00;
+    TCD0.CMPBSET = 0x0B;
 
     //WGMODE ONERAMP; 
     TCD0.CTRLB = 0x00;
@@ -70,8 +70,8 @@ int8_t TCD0_Initialize()
     //CMPDSEL PWMA; CMPCSEL PWMA; FIFTY enabled; AUPDATE disabled; CMPOVR disabled; 
     TCD0.CTRLC = 0x08;
 
-    //CMPBVAL 0; CMPAVAL 0; 
-    TCD0.CTRLD = 0x00;
+    //CMPBVAL 5; CMPAVAL 0; 
+    TCD0.CTRLD = 0x50;
 
     //DISEOC disabled; SCAPTUREB disabled; SCAPTUREA disabled; RESTART disabled; SYNC disabled; SYNCEOC disabled; 
     TCD0.CTRLE = 0x00;
@@ -114,8 +114,8 @@ int8_t TCD0_Initialize()
     //PWMACTB disabled; PWMACTA disabled; 
     TCD0.STATUS = 0x00;
 
-    //CLKSEL OSCHF; CNTPRES DIV32; SYNCPRES DIV1; ENABLE enabled; 
-    TCD0.CTRLA = 0x11;
+    //CLKSEL OSCHF; CNTPRES DIV4; SYNCPRES DIV1; ENABLE enabled; 
+    TCD0.CTRLA = 0x09;
 
     return 0;
 }

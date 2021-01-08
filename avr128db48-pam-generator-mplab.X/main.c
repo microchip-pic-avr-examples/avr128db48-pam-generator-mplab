@@ -24,9 +24,26 @@
 #include "mcc_generated_files/mcc.h"
 #include "waveform.h"
 
-/*
-    Main application
-*/
+//Non-Linear Output Function
+uint16_t customBehaviorFunction(uint16_t DACValue)
+{
+    //ISR_PULSE_SetHigh();
+    static volatile uint8_t increment = 1;
+    DACValue += increment;
+    
+    //Change the increment
+    increment += 1;
+    
+    //If the DAC limit is exceeded...
+    if (getMaximumOutputLevel() < DACValue)
+    {
+        DACValue = getMinimumOutputLevel();
+        increment = 1;
+    }
+    //ISR_PULSE_SetLow();
+    return DACValue;
+}
+
 int main(void)
 {
     /* Initializes MCU, drivers and middleware */
@@ -35,12 +52,21 @@ int main(void)
     // Init. Constants in the DAC Control
     initWaveformControl(SINE_1K);
     
+    //Only set this line for EXT_FUNC Output
+    //setWaveformFunction(&customBehaviorFunction);
+    
+    /* 
+     * Only use this line with DC Waveform Output - Sets the output level
+     * However, do NOT use with other waveform functions
+     * */
+    //DAC0_SetOutput(INIT_MINIMUM_OUTPUT);
+    
     // Set ISR to Update the DAC
     TCB0_SetCaptIsrCallback(&__ISR__UpdateDAC);
     
     while (1)
     {
-    
+      
     }
 }
 /**

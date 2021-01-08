@@ -16,7 +16,7 @@ extern "C" {
 #define INIT_MAXIMUM_OUTPUT 0x3FF
 
 //Rate of change for the rising edge of the triangle / sawtooth waveforms
-#define INIT_RATE_OF_CHANGE_POS 10
+#define INIT_RATE_OF_CHANGE_POS 2
     
 //Rate of change for the falling edge of the triangle waveforms.
 //(Note: Unsigned value)
@@ -24,7 +24,7 @@ extern "C" {
     
 //Set the Initial Level of the DAC
 //This can be used to create a phase-shift in the waveforms
-#define INIT_DAC_OUTPUT 0 
+#define INIT_DAC_OUTPUT INIT_MINIMUM_OUTPUT
     
     typedef enum {
         DC = 0, EXT_FUNC, TRIANGLE_RISING, TRIANGLE_FALLING, SAWTOOTH, SINE_1K
@@ -59,6 +59,59 @@ extern "C" {
      *  */
     void __ISR__UpdateDAC(void);
 
+    /** 
+     * <B><FONT COLOR=BLUE>void</FONT> setMinimumOutputLevel(<FONT COLOR=BLUE>uint16_t</FONT> level)</B>
+     * @param level (uint16_t) - Minimum DAC Output Level
+     * 
+     * This function can be called to change the minimum output level of the DAC.
+     * Only affects the triangle and sawtooth functions.
+     *  */
+    void setMinimumOutputLevel(uint16_t level);
+    
+    /** 
+     * <B><FONT COLOR=BLUE>void</FONT> setMaximumOutputLevel(<FONT COLOR=BLUE>uint16_t</FONT> level)</B>
+     * @param level (uint16_t) - Maximum DAC Output Level
+     * 
+     * This function can be called to change the maximum output level of the DAC.
+     * Only affects the triangle and sawtooth functions.
+     *  */
+    void setMaximumOutputLevel(uint16_t level);
+    
+    /** 
+     * <B><FONT COLOR=BLUE>void</FONT> getMinimumOutputLevel(<FONT COLOR=BLUE>void</FONT>)</B>
+     * 
+     * This function can be called to get the minimum DAC output level.
+     * Only applies to the triangle and sawtooth functions.
+     *  */
+    uint16_t getMinimumOutputLevel(void);
+    
+    /** 
+     * <B><FONT COLOR=BLUE>void</FONT> getMaximumOutputLevel(<FONT COLOR=BLUE>void</FONT>)</B>
+     * 
+     * This function can be called to get the maximum DAC output level.
+     * Only applies to the triangle and sawtooth functions.
+     *  */
+    uint16_t getMaximumOutputLevel(void);
+
+    
+    /** 
+     * <B><FONT COLOR=BLUE>void</FONT> setRisingROC(<FONT COLOR=BLUE>uint16_t</FONT> rate)</B>
+     * @param rate (uint16_t) - Rate of change (ROC)
+     * 
+     * This function can be called to set the rising rate-of-change.
+     * Only affects the triangle and sawtooth functions.
+     *  */
+    void setRisingROC(uint16_t rate);
+    
+    /** 
+     * <B><FONT COLOR=BLUE>void</FONT> setFallingROC(<FONT COLOR=BLUE>uint16_t</FONT> rate)</B>
+     * @param rate (uint16_t) - Rate of change (ROC)
+     * 
+     * This function can be called to set the falling rate-of-change.
+     * Only affects the triangle function.
+     *  */
+    void setFallingROC(uint16_t rate);
+        
     /** 
      * <B><FONT COLOR=BLUE>uint16_t</FONT> __updateWaveformTriangleRising(<FONT COLOR=BLUE>void</FONT>)</B>
      * @param DACvalue (uint16_t) - Current value in the DAC

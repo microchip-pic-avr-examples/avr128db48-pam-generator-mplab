@@ -50,7 +50,6 @@ void SYSTEM_Initialize(void)
     TCB0_Initialize();
     VREF_Initialize();
     TCD0_Initialize();
-    FLASH_Initialize();
     CPUINT_Initialize();
 }
 
@@ -105,8 +104,8 @@ int8_t CLKCTRL_Initialize()
     //PLLS disabled; EXTS disabled; XOSC32KS disabled; OSC32KS disabled; OSCHFS disabled; SOSC disabled; 
     ccp_write_io((void*)&(CLKCTRL.MCLKSTATUS),0x00);
 
-    //RUNSTDBY disabled; FREQSEL 16M; AUTOTUNE disabled; 
-    ccp_write_io((void*)&(CLKCTRL.OSCHFCTRLA),0x1C); 
+    //RUNSTDBY disabled; FREQSEL 24M; AUTOTUNE disabled; 
+    ccp_write_io((void*)&(CLKCTRL.OSCHFCTRLA),0x24); 
 
 	return 0;
 }

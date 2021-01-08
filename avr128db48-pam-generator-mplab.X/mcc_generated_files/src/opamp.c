@@ -36,7 +36,7 @@ void OPAMP_Initialize()
 {
     OPAMP_DisableSystem();
     
-    //TIMEBASE 15; 
+    //TIMEBASE 23; 
     OPAMP.TIMEBASE = OPAMP_TIMEBASE_VALUE << OPAMP_TIMEBASE_gp;
     
     //DBGRUN enabled; 
