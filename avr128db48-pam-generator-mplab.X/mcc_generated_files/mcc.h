@@ -42,11 +42,11 @@ extern "C" {
 #include "include/pin_manager.h"
 #include "include/tcd0.h"
 #include "include/opamp.h"
-#include "include/dac0.h"
-#include "include/tcb0.h"
 #include "include/vref.h"
-#include "include/ccl.h"
+#include "include/dac0.h"
 #include "include/cpuint.h"
+#include "include/ccl.h"
+#include "include/tcb0.h"
 #include "config/clock_config.h"
 
 /**

@@ -6,8 +6,8 @@
 static volatile uint16_t rampRatePos;
 static volatile uint16_t rampRateNeg;
 
-static volatile uint16_t startValue;
-static volatile uint16_t endValue;
+static volatile uint16_t minValue;
+static volatile uint16_t maxValue;
 
 static volatile _WaveformISR waveFunc;
 static volatile uint8_t index;
@@ -22,10 +22,10 @@ void initWaveformControl(WAVEFORM_OUTPUT funcSel)
     rampRateNeg = INIT_RATE_OF_CHANGE_NEG;
     
     //Init to MIN output
-    startValue = INIT_MINIMUM_OUTPUT;
+    minValue = INIT_MINIMUM_OUTPUT;
     
     //Init to MAX output
-    endValue = INIT_MAXIMUM_OUTPUT;
+    maxValue = INIT_MAXIMUM_OUTPUT;
     
     //Init Index to 0
     index = 0;
@@ -77,22 +77,22 @@ void __ISR__UpdateDAC(void)
 
 void setMinimumOutputLevel(uint16_t level)
 {
-    startValue = level;
+    minValue = level;
 }
 
 void setMaximumOutputLevel(uint16_t level)
 {
-    endValue = level;
+    maxValue = level;
 }
 
 uint16_t getMinimumOutputLevel(void)
 {
-    return startValue;
+    return minValue;
 }
 
 uint16_t getMaximumOutputLevel(void)
 {
-    return endValue;
+    return maxValue;
 }
 
 void setRisingROC(uint16_t rate)
@@ -110,10 +110,10 @@ uint16_t __updateWaveformTriangleRising(uint16_t DACvalue)
     //Update the DAC value
     DACvalue += rampRatePos;
     
-    if (DACvalue >= endValue)
+    if (DACvalue >= maxValue)
     {
         //Value will overflow, reset to "start"
-        DACvalue = endValue;
+        DACvalue = maxValue;
         
         //Swap to the other function
         waveFunc = &__updateWaveformTriangleFalling;
@@ -127,10 +127,10 @@ uint16_t __updateWaveformTriangleFalling(uint16_t DACvalue)
     //Update the DAC value
     DACvalue -= rampRateNeg;
     
-    if (DACvalue <= startValue)
+    if (DACvalue <= minValue)
     {
         //Value will overflow, reset to "start"        
-        DACvalue = startValue; //startValue;
+        DACvalue = minValue; //startValue;
         
         //Swap to the other function
         waveFunc = &__updateWaveformTriangleRising;
@@ -144,10 +144,10 @@ uint16_t __updateWaveformSawtooth(uint16_t DACvalue)
     //Update the DAC value
     DACvalue += rampRatePos;
     
-    if (DACvalue > endValue)
+    if (DACvalue > maxValue)
     {
         //Value will overflow, reset to "start"
-        DACvalue = startValue;
+        DACvalue = minValue;
     }
     
     return DACvalue;

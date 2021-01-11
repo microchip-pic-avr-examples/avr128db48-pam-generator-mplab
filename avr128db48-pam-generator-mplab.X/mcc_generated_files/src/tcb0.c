@@ -76,8 +76,8 @@ int8_t TCB0_Initialize()
     //Count
     TCB0.CNT = 0x00;
 
-    //ASYNC disabled; CCMPINIT disabled; CCMPEN disabled; CNTMODE INT; 
-    TCB0.CTRLB = 0x00;
+    //ASYNC disabled; CCMPINIT disabled; CCMPEN enabled; CNTMODE INT; 
+    TCB0.CTRLB = 0x10;
 
     //DBGRUN enabled; 
     TCB0.DBGCTRL = 0x01;

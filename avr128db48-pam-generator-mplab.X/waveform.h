@@ -23,7 +23,6 @@ extern "C" {
 #define INIT_RATE_OF_CHANGE_NEG 10
     
 //Set the Initial Level of the DAC
-//This can be used to create a phase-shift in the waveforms
 #define INIT_DAC_OUTPUT INIT_MINIMUM_OUTPUT
     
     typedef enum {

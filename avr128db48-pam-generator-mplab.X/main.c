@@ -59,7 +59,7 @@ int main(void)
      * Only use this line with DC Waveform Output - Sets the output level
      * However, do NOT use with other waveform functions
      * */
-    //DAC0_SetOutput(INIT_MINIMUM_OUTPUT);
+    DAC0_SetOutput(INIT_MINIMUM_OUTPUT);
     
     // Set ISR to Update the DAC
     TCB0_SetCaptIsrCallback(&__ISR__UpdateDAC);

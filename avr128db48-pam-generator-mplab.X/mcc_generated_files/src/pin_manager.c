@@ -32,7 +32,8 @@
 
 
 #include "../include/pin_manager.h"
-static void (*PORTB_IO_PB3_InterruptHandler)(void);
+static void (*PORTA_PA2_InterruptHandler)(void);
+static void (*PORTB_PB3_InterruptHandler)(void);
 static void (*PORTC_PC3_InterruptHandler)(void);
 static void (*PORTB_ISR_PULSE_InterruptHandler)(void);
 static void (*PORTA_PA4_InterruptHandler)(void);
@@ -51,7 +52,7 @@ void PIN_MANAGER_Initialize()
     PORT_Initialize();
 
     /* DIR Registers Initialization */
-    PORTA.DIR = 0xF8;
+    PORTA.DIR = 0xFC;
     PORTB.DIR = 0x28;
     PORTC.DIR = 0x08;
     PORTD.DIR = 0x4C;
@@ -156,7 +157,8 @@ void PIN_MANAGER_Initialize()
     PORTMUX.ZCDROUTEA = 0x00;
 
     // register default ISC callback functions at runtime; use these methods to register a custom function
-    PORTB_IO_PB3_SetInterruptHandler(PORTB_IO_PB3_DefaultInterruptHandler);
+    PORTA_PA2_SetInterruptHandler(PORTA_PA2_DefaultInterruptHandler);
+    PORTB_PB3_SetInterruptHandler(PORTB_PB3_DefaultInterruptHandler);
     PORTC_PC3_SetInterruptHandler(PORTC_PC3_DefaultInterruptHandler);
     PORTB_ISR_PULSE_SetInterruptHandler(PORTB_ISR_PULSE_DefaultInterruptHandler);
     PORTA_PA4_SetInterruptHandler(PORTA_PA4_DefaultInterruptHandler);
@@ -203,17 +205,30 @@ void PORT_Initialize(void)
 }
 
 /**
-  Allows selecting an interrupt handler for PORTB_IO_PB3 at application runtime
+  Allows selecting an interrupt handler for PORTA_PA2 at application runtime
 */
-void PORTB_IO_PB3_SetInterruptHandler(void (* interruptHandler)(void)) 
+void PORTA_PA2_SetInterruptHandler(void (* interruptHandler)(void)) 
 {
-    PORTB_IO_PB3_InterruptHandler = interruptHandler;
+    PORTA_PA2_InterruptHandler = interruptHandler;
 }
 
-void PORTB_IO_PB3_DefaultInterruptHandler(void)
+void PORTA_PA2_DefaultInterruptHandler(void)
 {
-    // add your PORTB_IO_PB3 interrupt custom code
-    // or set custom function using PORTB_IO_PB3_SetInterruptHandler()
+    // add your PORTA_PA2 interrupt custom code
+    // or set custom function using PORTA_PA2_SetInterruptHandler()
+}
+/**
+  Allows selecting an interrupt handler for PORTB_PB3 at application runtime
+*/
+void PORTB_PB3_SetInterruptHandler(void (* interruptHandler)(void)) 
+{
+    PORTB_PB3_InterruptHandler = interruptHandler;
+}
+
+void PORTB_PB3_DefaultInterruptHandler(void)
+{
+    // add your PORTB_PB3 interrupt custom code
+    // or set custom function using PORTB_PB3_SetInterruptHandler()
 }
 /**
   Allows selecting an interrupt handler for PORTC_PC3 at application runtime
