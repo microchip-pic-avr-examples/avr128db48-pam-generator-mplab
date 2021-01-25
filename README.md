@@ -39,7 +39,7 @@ This program can be divided into 2 parts - a PWM generator and an Arbitrary Wave
 
 ### PWM Generator
 
-The PWM generator was created using the Timer-Counter D peripheral in single-slope mode with a period of 4us and a 50% duty cycle at 250kHz. However, the TCD peripheral does not have an output on PORT C. To get the output to PORT C, the CCL peripheral was used to output a mirrored copy of the signal on PC3.
+The PWM generator was created using the TCD peripheral in single-slope mode with a period of 4us and a 50% duty cycle at 250kHz. However, the TCD peripheral does not have an output on PORT C. To get the output to PORT C, the CCL peripheral was used to output a mirrored copy of the signal on PC3.
 
 ### AWG Design
 
@@ -53,7 +53,7 @@ The AWG implemented on the AVR DB has the following types of outputs:
 
 *Note: The DC and External Function modes have the same initialization in software, with the naming only being for developer reference.*
 
-The DAC has a *typical* setting time between 7 and 10us. During settling, the value of the DAC should not be changed. The TCB peripheral is used to generate a 10us periodic interrupt. MPLAB Code Configurator (MCC) generates a generic TCB interrupt function, which contains a function pointer to invoke custom code without modifying the generated API. Through this mechanism, the function ` __ISR__UpdateDAC` is invoked.
+The DAC has a *typical* setting time between 7 and 10us (see the [electrical specifications section of the device datasheet](https://onlinedocs.microchip.com/pr/GUID-09746E70-A26B-4669-B803-2A1D0E0F7E70-en-US-14/GUID-E878141E-2330-40DD-9548-4539EC3DF1F7.html)). During settling, the value of the DAC should not be changed. To refresh the DAC, the TCB peripheral is used to generate a 10us periodic interrupt to update the value. MPLAB Code Configurator (MCC) generates a generic TCB interrupt function, which contains a function pointer to invoke custom code without modifying the generated API. Through this mechanism, the function ` __ISR__UpdateDAC` is invoked.
 
 Inside `__ISR__UpdateDAC`, the routine checks to see if it's own internal function pointer to a waveform calculation function is not NULL. If valid, then the function pointer is invoked. This internal function pointer calls functions in the format of `uint16_t <FUNCTION NAME> (uint16_t currentDACOutput)`, where the returned value is assigned to the DAC.
 
@@ -80,6 +80,8 @@ The parameter passed to `initWaveformControl(WAVEFORM_OUTPUT)` is used to set th
 The waveform function can be changed at runtime by calling `setWaveformFunction(_WaveformISR)` and passing a waveform function.
 
 ### Output Types
+
+The blue line in the images below is the supply voltage to MVIO (VDDIO2), while the yellow line is a 250kHz PWM output on an MVIO port.  
 
 ---  
 
