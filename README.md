@@ -25,11 +25,11 @@ Pulse Amplitude Modulation (PAM) is a type of mixed (analog and digital) signal 
 
 ## Setup
 
-To create this demo, the only required connection is from the output of the OPAMP (RD2) to the MVIO Power Supply (VDDIO2). If this connection is not made, the pins on the MVIO port will remain at a high-impedance.
+To create this demo, the only required connection is from the output of the OPAMP (PD2) to the MVIO Power Supply (VDDIO2). If this connection is not made, the pins on the MVIO port will remain at a high-impedance.
 
 For information about enabling MVIO on the Curiosity Nano, please see **section 5.1.3** in the [AVR128DB48 Curiosity Nano Hardware User Guide (DS50003037A)](https://ww1.microchip.com/downloads/en/DeviceDoc/AVR128DB48-Curiosity-Nano-HW-UserG-DS50003037A.pdf).
 
-The waveform output is on pin RC3. Other pins on PCx will also have the waveform superimposed on their output levels, if enabled as outputs. (Inputs will be affected by the changing  levels, which changes the thresholds for digital logic.)
+The waveform output is on pin PC3. Other pins on PCx will also have the waveform superimposed on their output levels, if enabled as outputs. (Inputs will be affected by the changing levels, which changes the thresholds for digital logic.)
 
 ![Setup Image](./images/setup.JPG)
 
