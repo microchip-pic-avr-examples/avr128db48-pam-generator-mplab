@@ -31,6 +31,8 @@ For information about enabling MVIO on the Curiosity Nano, please see **section 
 
 The waveform output is on pin RC3. Other pins on RCx will also have the waveform superimposed on their output levels, if enabled as outputs. (Inputs use a varying threshold due to the changing voltage).
 
+![Setup Image](./images/setup.JPG)
+
 ## Operation
 
 This program can be divided into 2 parts - a PWM generator and an Arbitrary Waveform Generator (AWG). The AWG is buffered by a voltage follower (Unity Gain) OPAMP and is used to power the MVIO port. In order to prevent the MVIO from shutting down, the supply voltage should always be 1.62V or higher.
@@ -51,9 +53,9 @@ The AWG implemented on the AVR DB has the following types of outputs:
 
 *Note: The DC and External Function modes have the same initialization in software, with the naming only being for developer reference.*
 
-The DAC has a *typical* setting time between 7 and 10us, so the Timer-Counter B (TCB) peripheral is used to generate a 10us periodic interrupt. MPLAB Code Configurator (MCC) generates a generic TCB interrupt, which calls the function ` __ISR__UpdateDAC` through the provided function pointer.
+The DAC has a *typical* setting time between 7 and 10us, so the Timer-Counter B (TCB) peripheral is used to generate a 10us periodic interrupt. MPLAB Code Configurator (MCC) generates a generic TCB interrupt function, which contains a function pointer to invoke custom code without modifying the generated API. Through this mechanism, the function ` __ISR__UpdateDAC` is invoked.
 
-Inside this function, the routine checks to see if it's own internal function pointer to a waveform function is not null. If so, then the function pointer is invoked and the DAC value is updated. This internal function pointer calls functions in the format of `uint16_t <FUNCTION NAME> (uint16_t currentDACOutput)`, where the returned value is assigned to the DAC.
+Inside `__ISR__UpdateDAC`, the routine checks to see if it's own internal function pointer to a waveform calculation function is not null. If valid, then the function pointer is invoked. This internal function pointer calls functions in the format of `uint16_t <FUNCTION NAME> (uint16_t currentDACOutput)`, where the returned value is assigned to the DAC.
 
 At initialization, internally used variables and the DAC initial values are set. The table below shows the macros and their associated variable.
 
@@ -79,15 +81,15 @@ The function pointer can be modified by using `setWaveformFunction(_WaveformISR)
 
 ### DC
 
-In this mode, the DAC level is static and unchanging. The DAC interrupt does not trigger a function call to look for a new value. `INIT_DAC_OUTPUT` should be used to set the DAC to the appropriate level at runtime, or alternatively, `DAC0_SetOutput(dac_resolution_t value)` can be called from main. See `main.c` for more information.
+In this mode, the DAC level is static and unchanging. The DAC interrupt does not trigger a function call to calculate a new value. `INIT_DAC_OUTPUT` should be used to set the DAC to the appropriate level at runtime, or alternatively, `DAC0_SetOutput(dac_resolution_t value)` can be called from main. See `main.c` for more information.
 
-**In this mode, the output of the MVIO port is not PAM, just PWM.**
+**In this mode, the output of the MVIO port is not PAM.**
 
 ![DC Function](./images/DC.PNG)
 
 ### External Function
 
-This mode is provided for developers to connect an external function to the software without the need to modify the inner workings. To demonstrate this, a function was implemented to change the DAC value by a factor that increments by 1 each time (e.g.: start + 1, start + 3, start + 6).
+This mode is provided for developers to connect an external function to the example without the need to modify the inner workings. To demonstrate this, a function was implemented in `main.c` to change the DAC value by a factor that increments by 1 each time (e.g.: start + 1, start + 3, start + 6).
 
 To properly use the demo function, uncomment `setWaveformFunction(&customBehaviorFunction)` in `main.c`.
 
@@ -95,7 +97,7 @@ To properly use the demo function, uncomment `setWaveformFunction(&customBehavio
 
 ### Triangle
 
-The triangle output is split into 2 functions - a rising edge and a falling edge function. The rising edge function increments the DAC by an `rampRatePos`, while the falling edge decrements the DAC by an (unsigned) `rampRateNeg`. When the DAC reaches `maxValue`, the function pointer is internally reassigned to the falling edge function. The falling edge function runs until the DAC value reaches `minValue`, where the pointer is reassigned to the rising edge.
+The triangle output is split into 2 functions - a rising edge and a falling edge. The rising edge function increments the DAC by an `rampRatePos`, while the falling edge decrements the DAC by an (unsigned) `rampRateNeg`. When the DAC reaches `maxValue`, the function pointer is internally reassigned to the falling edge function. The falling edge function runs until the DAC value reaches `minValue`, where the pointer is reassigned to the rising edge.
 
 ![Triangle Function](./images/Triangle.PNG)
 
@@ -107,7 +109,7 @@ The sawtooth output is a simplified version of the triangle function. The DAC va
 
 ### 1kHz Sine
 
-The 1kHz sine wave output is generated by an embedded sine lookup table in memory. This removes the complicated math required to generate a good quality sine wave, at the cost of memory usage and fixed waveform parameters.
+The 1kHz sine wave output is generated by an embedded sine lookup table in memory. This removes the complicated math required to generate a good quality sine wave, at the cost of memory usage and fixed waveform parameters. The amplitude and frequency are fixed in the table, and cannot be modified.
 
 ![1kHz Sine Function](./images/Sine.PNG)
 
