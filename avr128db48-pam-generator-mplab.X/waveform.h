@@ -10,7 +10,7 @@ extern "C" {
 
 //Lowest Output Code allowed for the DAC (before right shifting).
 //Approx 1.8V with 5V VDD
-#define INIT_MINIMUM_OUTPUT 369
+#define INIT_MINIMUM_OUTPUT 0x171
 
 //Maximum Output Code allowed for the DAC (before right shifting)
 #define INIT_MAXIMUM_OUTPUT 0x3FF

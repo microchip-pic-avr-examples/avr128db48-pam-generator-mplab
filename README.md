@@ -35,11 +35,11 @@ The waveform output is on pin PC3. Other pins on PCx will also have the waveform
 
 ## Operation
 
-This program can be divided into 2 parts - a PWM generator and an Arbitrary Waveform Generator (AWG). The AWG is buffered by a voltage follower (Unity Gain) OPAMP and is used to power the MVIO port. In order to prevent the MVIO from shutting down, the supply voltage should always be 1.62V or higher.
+This program can be divided into 2 parts - a PWM generator and an Arbitrary Waveform Generator (AWG). The AWG is buffered by a voltage follower (Unity Gain) OPAMP and is used to power the MVIO port. In order to prevent the MVIO from shutting down, the supply voltage should always be 1.62V or higher (but lower than VDDIO2<sub>MAX</sub>).
 
 ### PWM Generator
 
-The PWM generator was created using the TCD peripheral in single-slope mode with a period of 4us and a 50% duty cycle at 250kHz. However, the TCD peripheral does not have an output on PORT C. To get the output to PORT C, the CCL peripheral was used to output a mirrored copy of the signal on PC3.
+The PWM generator was created using the TCD peripheral in single-slope mode with a period of 4us and a 50% duty cycle at 250kHz. However, the TCD peripheral does not have an output on the PORT that has MVIO functionality (PORT C). To get the output to PORT C, the CCL peripheral was used to output a mirrored copy of the signal on PC3.
 
 ### AWG Design
 
@@ -61,10 +61,10 @@ At initialization, internally used variables and the DAC initial values are set.
 
 | Macro name              | Default Value       | Variable    | Description
 | ----------------------- | ------------------- | ----------- | ------------
-| INIT_MINIMUM_OUTPUT     | 369                 | minValue    | Sets the lowest output value for the DAC (default ~1.8V at Vdd = 5V).
+| INIT_MINIMUM_OUTPUT     | 0x171               | minValue    | Sets the lowest output value for the DAC (default ~1.8V at Vdd = 5V).
 | INIT_MAXIMUM_OUTPUT     | 0x3FF               | maxValue    | Sets the highest output value for the DAC (defaults to full-scale).
-| INIT_RATE_OF_CHANGE_POS | 2                   | rampRatePos | Sets the rising rate of change for the triangle and sawtooth functions.
-| INIT_RATE_OF_CHANGE_NEG | 10                  | rampRateNeg | Sets the falling rate of change for the triangle function.
+| INIT_RATE_OF_CHANGE_POS | 0x0002              | rampRatePos | Sets the rising rate of change for the triangle and sawtooth functions.
+| INIT_RATE_OF_CHANGE_NEG | 0x000A              | rampRateNeg | Sets the falling rate of change for the triangle function.
 | INIT_DAC_OUTPUT         | INIT_MINIMUM_OUTPUT | DAC0.DATA   | Sets the initial value of the DAC.
 
 *Note: The 1kHz sine function does not utilize the max and min output constants, see the sine section below for more info.*
