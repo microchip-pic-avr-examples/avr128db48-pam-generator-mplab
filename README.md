@@ -35,7 +35,7 @@ The waveform output is on pin PC3. Other pins on PCx will also have the waveform
 
 ## Operation
 
-This program can be divided into 2 parts - a PWM generator and an Arbitrary Waveform Generator (AWG). The AWG is buffered by a voltage follower (Unity Gain) OPAMP and is used to power the MVIO port. In order to prevent the MVIO from shutting down, the supply voltage should always be 1.62V or higher (but lower than VDDIO2<sub>MAX</sub>).
+This program can be divided into 2 parts - a PWM generator and an Arbitrary Waveform Generator (AWG). The AWG is buffered by a voltage follower (Unity Gain) OPAMP and is used to power the MVIO port. In order to prevent the MVIO from shutting down, the supply voltage should always be 1.62V or higher (but lower than VDDIO2<sub>MAX</sub>). 
 
 ### PWM Generator
 
